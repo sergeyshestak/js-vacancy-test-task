@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: js-vacancy-test-task-api
+    runtime: docker
+    plan: free
+    dockerfilePath: apps/api/Dockerfile
+    buildFilter:
+      paths:
+        - apps/api/**
+  - type: web
+    name: js-vacancy-test-task-web
+    runtime: docker
+    plan: free
+    dockerfilePath: apps/web/Dockerfile
+    buildFilter:
+      paths:
+        - apps/web/**
