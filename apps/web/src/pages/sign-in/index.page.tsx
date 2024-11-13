@@ -8,12 +8,9 @@ import { useForm } from 'react-hook-form';
 
 import { accountApi } from 'resources/account';
 
-import { GoogleIcon } from 'public/icons';
-
 import { handleApiError } from 'utils';
 
 import { RoutePath } from 'routes';
-import config from 'config';
 
 import { signInSchema } from 'schemas';
 import { SignInParams } from 'types';
@@ -79,15 +76,6 @@ const SignIn: NextPage = () => {
         </Stack>
 
         <Stack gap={32}>
-          <Button
-            component="a"
-            variant="outline"
-            leftSection={<GoogleIcon />}
-            href={`${config.API_URL}/account/sign-in/google/auth`}
-          >
-            Continue with Google
-          </Button>
-
           <Group justify="center" gap={12}>
             Don’t have an account?
             <Anchor component={Link} href={RoutePath.SignUp}>

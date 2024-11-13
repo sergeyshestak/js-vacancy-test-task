@@ -22,8 +22,8 @@ import { ToCamelCase } from 'types';
 import * as helpers from './cloud-storage.helper';
 
 const client = new S3Client({
-  forcePathStyle: false, // Configures to use subdomain/virtual calling format.
-  region: 'us-east-1', // To successfully create a new bucket, this SDK requires the region to be us-east-1
+  forcePathStyle: false,
+  region: 'us-east-1',
   endpoint: config.CLOUD_STORAGE_ENDPOINT,
   credentials: {
     accessKeyId: config.CLOUD_STORAGE_ACCESS_KEY_ID ?? '',

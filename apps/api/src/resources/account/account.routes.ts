@@ -2,7 +2,6 @@ import { routeUtil } from 'utils';
 
 import forgotPassword from './actions/forgot-password';
 import get from './actions/get';
-import google from './actions/google';
 import removeAvatar from './actions/remove-avatar';
 import resendEmail from './actions/resend-email';
 import resetPassword from './actions/reset-password';
@@ -24,7 +23,6 @@ const publicRoutes = routeUtil.getRoutes([
   resetPassword,
   verifyResetToken,
   resendEmail,
-  google,
 ]);
 
 const privateRoutes = routeUtil.getRoutes([get, update, uploadAvatar, removeAvatar]);

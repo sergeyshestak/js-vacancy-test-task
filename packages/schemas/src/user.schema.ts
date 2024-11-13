@@ -5,10 +5,6 @@ import { EMAIL_REGEX } from 'app-constants';
 import { emailSchema, passwordSchema } from './common.schema';
 import dbSchema from './db.schema';
 
-const oauthSchema = z.object({
-  google: z.boolean().default(false),
-});
-
 export const userSchema = dbSchema
   .extend({
     firstName: z.string().min(1, 'Please enter First name').max(100),
@@ -25,8 +21,6 @@ export const userSchema = dbSchema
     resetPasswordToken: z.string().nullable().optional(),
 
     avatarUrl: z.string().nullable().optional(),
-
-    oauth: oauthSchema.optional(),
 
     lastRequest: z.date().optional(),
   })

@@ -1,5 +1,5 @@
 {
-  "name": "ship",
+  "name": "shopy",
   "scripts": {
     "infra": "bash ./bin/start.sh mongo redis mongo-replicator",
     "turbo-start": "turbo run development",

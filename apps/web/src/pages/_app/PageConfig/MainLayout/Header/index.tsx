@@ -4,7 +4,7 @@ import { Anchor, AppShell, Group } from '@mantine/core';
 
 import { accountApi } from 'resources/account';
 
-import { LogoImage } from 'public/images';
+import { ShopyImage } from 'public/images';
 
 import { RoutePath } from 'routes';
 
@@ -22,7 +22,7 @@ const Header: FC = () => {
 
       <Group h={72} px={32} py={0} justify="space-between" bg="white">
         <Anchor component={Link} href={RoutePath.Home}>
-          <LogoImage />
+          <ShopyImage />
         </Anchor>
 
         <UserMenu />

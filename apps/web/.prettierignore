@@ -31,3 +31,11 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+.env
+.env.*
+Dockerfile
+Dockerfile.*
+.prettierignore
+*.svg
+*.ico

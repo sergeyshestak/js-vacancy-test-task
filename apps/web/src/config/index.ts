@@ -13,6 +13,7 @@ const schema = z.object({
   API_URL: z.string(),
   WS_URL: z.string(),
   WEB_URL: z.string(),
+  STRIPE_PUBLISHABLE_KEY: z.string(),
   MIXPANEL_API_KEY: z.string().optional(),
 });
 
@@ -28,6 +29,7 @@ const processEnv = {
   WS_URL: process.env.NEXT_PUBLIC_WS_URL,
   WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
   MIXPANEL_API_KEY: process.env.NEXT_PUBLIC_MIXPANEL_API_KEY,
+  STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 } as Record<keyof Config, string | undefined>;
 
 const config = validateConfig<Config>(schema, processEnv);
