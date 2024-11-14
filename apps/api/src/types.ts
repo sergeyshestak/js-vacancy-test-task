@@ -34,4 +34,11 @@ export type ValidationErrors = {
   [name: string]: string[] | string;
 };
 
+export type Purchase = {
+  name: string;
+  images: string[];
+  unit_amount: number;
+  quantity: number;
+};
+
 export { Next, Template };
