@@ -27,8 +27,8 @@ async function handler(ctx: AppKoaContext) {
   const session = await stripe.checkout.sessions.create({
     line_items: lineItems,
     mode: 'payment',
-    success_url: `${ctx.request.headers.origin}/card/purchase-result?success=true`,
-    cancel_url: `${ctx.request.headers.origin}/card/purchase-result?success=false`,
+    success_url: `${ctx.request.headers.origin}/cart/purchase-result?success=true`,
+    cancel_url: `${ctx.request.headers.origin}/cart/purchase-result?success=false`,
   });
 
   ctx.body = { checkoutSessionId: session.id };

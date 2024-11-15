@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import { Stack, Title } from '@mantine/core';
 
-import { cardApi } from 'resources/card';
+import { cartApi } from 'resources/cart';
 
 import { getStripe } from 'utils';
 
@@ -24,8 +24,8 @@ const purchases: Purchase[] = [
   },
 ];
 
-const Card: NextPage = () => {
-  const { mutate: createCheckout, data } = cardApi.useCheckoutSession();
+const Cart: NextPage = () => {
+  const { mutate: createCheckout, data } = cartApi.useCheckoutSession();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -51,12 +51,12 @@ const Card: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Card</title>
+        <title>Cart</title>
       </Head>
 
       <Stack gap="lg">
-        <Title order={2}>Card</Title>
-        Card Page
+        <Title order={2}>Cart</Title>
+        Cart Page
       </Stack>
       <form onSubmit={handleSubmit}>
         <button type="submit">checkout</button>
@@ -65,4 +65,4 @@ const Card: NextPage = () => {
   );
 };
 
-export default Card;
+export default Cart;

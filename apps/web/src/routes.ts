@@ -12,7 +12,7 @@ export enum RoutePath {
   // Private paths
   Home = '/',
   Profile = '/profile',
-  Card = '/card',
+  Cart = '/cart',
 
   // Auth paths
   SignIn = '/sign-in',
@@ -41,7 +41,7 @@ export const routesConfiguration: RoutesConfiguration = {
     scope: ScopeType.PRIVATE,
     layout: LayoutType.MAIN,
   },
-  [RoutePath.Card]: {
+  [RoutePath.Cart]: {
     scope: ScopeType.PRIVATE,
     layout: LayoutType.MAIN,
   },

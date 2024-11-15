@@ -6,5 +6,5 @@ import { ApiError, CheckoutSession, Purchase } from 'types';
 
 export const useCheckoutSession = <T = Purchase[]>() =>
   useMutation<CheckoutSession, ApiError, T>({
-    mutationFn: (data: T) => apiService.post('/card/checkout-session', data),
+    mutationFn: (data: T) => apiService.post('/cart/checkout-session', data),
   });
