@@ -38,7 +38,6 @@ export type Purchase = {
   name: string;
   images: string[];
   unit_amount: number;
-  quantity: number;
 };
 
 export { Next, Template };

@@ -13,6 +13,8 @@ import PrivateScope from './PrivateScope';
 import UnauthorizedLayout from './UnauthorizedLayout';
 
 import 'resources/user/user.handlers';
+import 'resources/product/product.handlers';
+import 'resources/cart/cart.handlers';
 
 const layoutToComponent = {
   [LayoutType.MAIN]: MainLayout,

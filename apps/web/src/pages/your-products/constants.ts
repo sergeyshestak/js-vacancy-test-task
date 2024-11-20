@@ -10,7 +10,6 @@ export const EXTERNAL_SORT_FIELDS: Array<keyof ProductsListSortParams> = ['creat
 
 export const DEFAULT_PARAMS: ProductsListParams = {
   page: DEFAULT_PAGE,
-  searchValue: '',
   perPage: PER_PAGE,
   sort: {
     createdOn: 'desc',

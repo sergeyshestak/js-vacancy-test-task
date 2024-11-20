@@ -37,7 +37,11 @@ async function validator(ctx: AppKoaContext<ValidatedData>, next: Next) {
 async function handler(ctx: AppKoaContext<ValidatedData>) {
   const { user } = ctx.validatedData;
 
-  await Promise.all([userService.updateLastRequest(user._id), authService.setTokens(ctx, user._id)]);
+  await Promise.all([
+    userService.updateLastRequest(user._id),
+    authService.setTokens(ctx, user._id),
+    authService.setUserId(ctx, user._id),
+  ]);
 
   ctx.body = userService.getPublic(user);
 }

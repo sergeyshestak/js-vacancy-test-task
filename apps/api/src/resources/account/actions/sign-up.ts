@@ -1,3 +1,4 @@
+import { cartService } from 'resources/cart';
 import { userService } from 'resources/user';
 
 import { validateMiddleware } from 'middlewares';
@@ -34,6 +35,12 @@ async function handler(ctx: AppKoaContext<SignUpParams>) {
     passwordHash: hash.toString(),
     isEmailVerified: false,
     signupToken,
+  });
+
+  await cartService.insertOne({
+    userId: user._id,
+    cart: [],
+    purchaseHistory: [],
   });
 
   analyticsService.track('New user created', {

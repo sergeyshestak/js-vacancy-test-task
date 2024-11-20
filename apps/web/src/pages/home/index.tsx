@@ -3,23 +3,25 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import { Stack, Title } from '@mantine/core';
 import { useSetState } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
 import { SortDirection } from '@tanstack/react-table';
 import { pick } from 'lodash';
 
-import { userApi, UsersListParams } from 'resources/user';
+import { cartApi } from 'resources/cart';
+import { productApi, ProductsListParams } from 'resources/product';
 
 import { Table } from 'components';
 
-import { User } from 'types';
+import { Product, ProductCreateParams } from 'types';
 
 import Filters from './components/Filters';
 import { COLUMNS, DEFAULT_PAGE, DEFAULT_PARAMS, EXTERNAL_SORT_FIELDS, PER_PAGE } from './constants';
 
 const Home: NextPage = () => {
-  const [params, setParams] = useSetState<UsersListParams>(DEFAULT_PARAMS);
+  const [params, setParams] = useSetState<ProductsListParams>(DEFAULT_PARAMS);
+  const { mutate: addProductToCart } = cartApi.useAddProductToCart();
 
-  const { data: users, isLoading: isUserLostLoading } = userApi.useList(params);
+  const { data: products, isLoading: isProductLostLoading } = productApi.useList(params);
+  const { mutate: productCreate } = productApi.useProductCreate();
 
   const onSortingChange = (sort: Record<string, SortDirection>) => {
     setParams((prev) => {
@@ -29,33 +31,43 @@ const Home: NextPage = () => {
     });
   };
 
-  const onRowClick = (user: User) => {
-    showNotification({
-      title: 'Success',
-      message: `You clicked on the row for the user with the email address ${user.email}.`,
-      color: 'green',
-    });
+  const onRowClick = (product: Product) => {
+    addProductToCart({ productId: product._id });
+  };
+
+  const onCreate = () => {
+    const product: ProductCreateParams = {
+      title: 'Mock Product 11',
+      unitPrice: 999,
+      image: '',
+    };
+
+    productCreate(product);
   };
 
   return (
     <>
       <Head>
-        <title>Users</title>
+        <title>Products</title>
       </Head>
 
       <Stack gap="lg">
-        <Title order={2}>Users</Title>
+        <Title order={2}>Products</Title>
+
+        <button type="button" onClick={onCreate}>
+          Create Product
+        </button>
 
         <Filters setParams={setParams} />
 
-        <Table<User>
-          data={users?.results}
-          totalCount={users?.count}
-          pageCount={users?.pagesCount}
+        <Table<Product>
+          data={products?.results}
+          totalCount={products?.count}
+          pageCount={products?.pagesCount}
           page={DEFAULT_PAGE}
           perPage={PER_PAGE}
           columns={COLUMNS}
-          isLoading={isUserLostLoading}
+          isLoading={isProductLostLoading}
           onPageChange={(page) => setParams({ page })}
           onSortingChange={onSortingChange}
           onRowClick={onRowClick}

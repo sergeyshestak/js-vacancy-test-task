@@ -25,9 +25,8 @@ export type ListParams<T, F> = {
 
 export type Purchase = {
   name: string;
-  images: string[];
+  images?: string[];
   unit_amount: number;
-  quantity: number;
 };
 
 export type CheckoutSession = {

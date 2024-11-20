@@ -4,6 +4,7 @@ import { AppKoaContext, AppRouter } from 'types';
 
 const handler = async (ctx: AppKoaContext) => {
   await authService.unsetTokens(ctx);
+  await authService.unsetUserId(ctx);
 
   ctx.status = 204;
 };

@@ -1,12 +1,13 @@
 import { z } from 'zod';
 
-import { userService } from 'resources/user';
+import { productService } from 'resources/product';
 
 import { validateMiddleware } from 'middlewares';
 import { stringUtil } from 'utils';
 
+import { COOKIES } from 'app-constants';
 import { paginationSchema } from 'schemas';
-import { AppKoaContext, AppRouter, NestedKeys, User } from 'types';
+import { AppKoaContext, AppRouter, NestedKeys, Product } from 'types';
 
 const schema = paginationSchema.extend({
   filter: z
@@ -21,9 +22,7 @@ const schema = paginationSchema.extend({
     .optional(),
   sort: z
     .object({
-      firstName: z.enum(['asc', 'desc']).optional(),
-      lastName: z.enum(['asc', 'desc']).optional(),
-      createdOn: z.enum(['asc', 'desc']).default('asc'),
+      title: z.enum(['asc', 'desc']).optional(),
     })
     .default({}),
 });
@@ -31,6 +30,7 @@ const schema = paginationSchema.extend({
 type ValidatedData = z.infer<typeof schema>;
 
 async function handler(ctx: AppKoaContext<ValidatedData>) {
+  const userId = ctx.cookies.get(COOKIES.USER_ID);
   const { perPage, page, sort, searchValue, filter } = ctx.validatedData;
 
   const filterOptions = [];
@@ -38,7 +38,7 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
   if (searchValue) {
     const searchPattern = stringUtil.escapeRegExpString(searchValue);
 
-    const searchFields: NestedKeys<User>[] = ['firstName', 'lastName', 'email'];
+    const searchFields: NestedKeys<Product>[] = ['title'];
 
     filterOptions.push({
       $or: searchFields.map((field) => ({ [field]: { $regex: searchPattern } })),
@@ -64,15 +64,15 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
     });
   }
 
-  const result = await userService.find(
-    { ...(filterOptions.length && { $and: filterOptions }) },
+  const result = await productService.find(
+    { $and: [...filterOptions, { userId: { $ne: userId }, sold: false }] },
     { page, perPage },
     { sort },
   );
 
-  ctx.body = { ...result, results: result.results.map(userService.getPublic) };
+  ctx.body = { ...result, results: result.results };
 }
 
 export default (router: AppRouter) => {
-  router.get('/users-list', validateMiddleware(schema), handler);
+  router.get('/', validateMiddleware(schema), handler);
 };

@@ -24,7 +24,18 @@ const Header: FC = () => {
         <Anchor component={Link} href={RoutePath.Home}>
           <ShopyImage />
         </Anchor>
-
+        <Anchor component={Link} href={RoutePath.Home}>
+          Marketplace
+        </Anchor>
+        <Anchor component={Link} href={RoutePath.YourProducts}>
+          Your Products
+        </Anchor>
+        <Anchor component={Link} href={RoutePath.Cart}>
+          My Cart
+        </Anchor>
+        <Anchor component={Link} href={RoutePath.History}>
+          History
+        </Anchor>
         <UserMenu />
       </Group>
     </AppShell.Header>

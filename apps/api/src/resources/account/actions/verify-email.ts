@@ -38,7 +38,11 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
     signupToken: null,
   }));
 
-  await Promise.all([userService.updateLastRequest(user._id), authService.setTokens(ctx, user._id)]);
+  await Promise.all([
+    userService.updateLastRequest(user._id),
+    authService.setTokens(ctx, user._id),
+    authService.setUserId(ctx, user._id),
+  ]);
 
   await emailService.sendTemplate<Template.SIGN_UP_WELCOME>({
     to: user.email,

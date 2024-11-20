@@ -2,33 +2,33 @@ import React, { FormEvent, useEffect } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { Stack, Title } from '@mantine/core';
+import { UseQueryResult } from '@tanstack/react-query';
 
 import { cartApi } from 'resources/cart';
 
 import { getStripe } from 'utils';
 
-import { Purchase } from 'types';
-
-const purchases: Purchase[] = [
-  {
-    name: 'Mars',
-    images: ['https://js-test-task-shopy.s3.tebi.io/avatars/6731ddeb97b04db02671987e-1731596210148-mars.png'],
-    unit_amount: 1999,
-    quantity: 1,
-  },
-  {
-    name: 'Snikers',
-    images: ['https://js-test-task-shopy.s3.tebi.io/avatars/6731ddeb97b04db02671987e-1731596210148-mars.png'],
-    unit_amount: 1099,
-    quantity: 2,
-  },
-];
+import { Product, Purchase } from 'types';
 
 const Cart: NextPage = () => {
   const { mutate: createCheckout, data } = cartApi.useCheckoutSession();
+  const { data: products }: UseQueryResult<Product[]> = cartApi.useCart();
+  const { mutate: deleteProductFromCart } = cartApi.useDeleteProductFromCart();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (!products) return;
+
+    const purchases = products.reduce<Array<Purchase>>((acc, product) => {
+      const purchase: Purchase = {
+        name: product.title,
+        unit_amount: product.unitPrice,
+        ...(!!product.image && { images: [product.image] }),
+      };
+      acc.push(purchase);
+
+      return acc;
+    }, []);
 
     createCheckout(purchases);
   };
@@ -48,6 +48,10 @@ const Cart: NextPage = () => {
     redirectToStripeCheckoutSession();
   }, [data]);
 
+  const onRowClick = (product: Product) => {
+    deleteProductFromCart({ productId: product._id });
+  };
+
   return (
     <>
       <Head>
@@ -61,6 +65,15 @@ const Cart: NextPage = () => {
       <form onSubmit={handleSubmit}>
         <button type="submit">checkout</button>
       </form>
+      {!!products &&
+        products?.map((product) => (
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <p>{product.title}</p>
+            <button type="button" onClick={() => onRowClick(product)}>
+              delete from cart
+            </button>
+          </div>
+        ))}
     </>
   );
 };

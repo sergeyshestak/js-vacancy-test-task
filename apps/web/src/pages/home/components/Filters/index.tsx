@@ -5,7 +5,7 @@ import { useDebouncedValue, useInputState, useSetState } from '@mantine/hooks';
 import { IconSearch, IconSelector, IconX } from '@tabler/icons-react';
 import { set } from 'lodash';
 
-import { UsersListParams } from 'resources/user';
+import { ProductsListParams } from 'resources/product';
 
 const selectOptions: ComboboxItem[] = [
   {
@@ -19,7 +19,7 @@ const selectOptions: ComboboxItem[] = [
 ];
 
 interface FiltersProps {
-  setParams: ReturnType<typeof useSetState<UsersListParams>>[1];
+  setParams: ReturnType<typeof useSetState<ProductsListParams>>[1];
 }
 
 const Filters: FC<FiltersProps> = ({ setParams }) => {
@@ -63,7 +63,7 @@ const Filters: FC<FiltersProps> = ({ setParams }) => {
           size="md"
           value={search}
           onChange={setSearch}
-          placeholder="Search by name or email"
+          placeholder="Search by title"
           leftSection={<IconSearch size={16} />}
           rightSection={
             search && (

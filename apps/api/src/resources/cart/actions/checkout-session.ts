@@ -8,7 +8,7 @@ async function handler(ctx: AppKoaContext) {
   const purchases = <Purchase[]>ctx.request.body;
 
   const lineItems = await Promise.all(
-    purchases.map(async ({ name, images, unit_amount, quantity = 1 }) => {
+    purchases.map(async ({ name, images, unit_amount }) => {
       const product = await stripe.products.create({
         name,
         images,
@@ -20,7 +20,7 @@ async function handler(ctx: AppKoaContext) {
         currency: 'usd',
       });
 
-      return { price: price.id, quantity };
+      return { price: price.id, quantity: 1 };
     }),
   );
 
