@@ -4,8 +4,8 @@ import dbSchema from './db.schema';
 import { productSchema } from './product.schema';
 
 export const purchaseHistorySchema = z.array(
-  productSchema.extend({
-    date: z.date(),
+  productSchema.pick({ userId: true, unitPrice: true, title: true, image: true }).extend({
+    date: z.string(),
   }),
 );
 

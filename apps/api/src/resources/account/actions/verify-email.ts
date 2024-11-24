@@ -49,7 +49,7 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
     subject: 'Welcome to Ship Community!',
     template: Template.SIGN_UP_WELCOME,
     params: {
-      firstName: user.firstName,
+      firstName: '',
       href: `${config.WEB_URL}/sign-in`,
     },
   });

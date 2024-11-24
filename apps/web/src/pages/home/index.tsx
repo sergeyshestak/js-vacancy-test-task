@@ -1,49 +1,78 @@
-import React from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { Stack, Title } from '@mantine/core';
-import { useSetState } from '@mantine/hooks';
-import { SortDirection } from '@tanstack/react-table';
-import { pick } from 'lodash';
+import {
+  ActionIcon,
+  ComboboxItem,
+  Flex,
+  Group,
+  Image,
+  Pagination,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  useMantineTheme,
+} from '@mantine/core';
+import { useDebouncedValue, useInputState, useSetState } from '@mantine/hooks';
+import { IconArrowsDownUp, IconChevronDown, IconSearch, IconX } from '@tabler/icons-react';
+import { set } from 'lodash';
 
 import { cartApi } from 'resources/cart';
 import { productApi, ProductsListParams } from 'resources/product';
 
-import { Table } from 'components';
+import { PrimaryButton } from 'components';
 
-import { Product, ProductCreateParams } from 'types';
+import { Product } from 'types';
 
 import Filters from './components/Filters';
-import { COLUMNS, DEFAULT_PAGE, DEFAULT_PARAMS, EXTERNAL_SORT_FIELDS, PER_PAGE } from './constants';
+import FilterTags from './components/FilterTags';
+import { DEFAULT_PARAMS } from './constants';
+
+import classes from './index.module.css';
+
+const selectOptions: ComboboxItem[] = [
+  {
+    value: 'newest',
+    label: 'Sort by newest',
+  },
+  {
+    value: 'oldest',
+    label: 'Sort by oldest',
+  },
+];
 
 const Home: NextPage = () => {
+  const theme = useMantineTheme();
   const [params, setParams] = useSetState<ProductsListParams>(DEFAULT_PARAMS);
+  const [activePage, setPage] = useState(1);
+  const [search, setSearch] = useInputState('');
+  const [sortBy, setSortBy] = useState<string | null>(selectOptions[0].value);
   const { mutate: addProductToCart } = cartApi.useAddProductToCart();
+  const { data: cart } = cartApi.useCart();
+  const { data: products } = productApi.useList(params);
+  const [debouncedSearch] = useDebouncedValue(search, 500);
 
-  const { data: products, isLoading: isProductLostLoading } = productApi.useList(params);
-  const { mutate: productCreate } = productApi.useProductCreate();
+  useLayoutEffect(() => {
+    setParams({ searchValue: debouncedSearch });
+  }, [debouncedSearch]);
 
-  const onSortingChange = (sort: Record<string, SortDirection>) => {
-    setParams((prev) => {
-      const combinedSort = { ...pick(prev.sort, EXTERNAL_SORT_FIELDS), ...sort };
-
-      return { sort: combinedSort };
-    });
-  };
-
-  const onRowClick = (product: Product) => {
+  const addToCart = (product: Product) => {
     addProductToCart({ productId: product._id });
   };
 
-  const onCreate = () => {
-    const product: ProductCreateParams = {
-      title: 'Mock Product 11',
-      unitPrice: 999,
-      image: '',
-    };
+  const handleSort = (value: string | null) => {
+    setSortBy(value);
 
-    productCreate(product);
+    setParams((old) => set(old, 'sort.createdOn', value === 'newest' ? 'desc' : 'asc'));
   };
+
+  useLayoutEffect(() => {
+    if (!!products?.pagesCount && activePage > products?.pagesCount) {
+      setPage(products?.pagesCount);
+      setParams({ page: products?.pagesCount });
+    }
+  }, [params, products]);
 
   return (
     <>
@@ -51,28 +80,101 @@ const Home: NextPage = () => {
         <title>Products</title>
       </Head>
 
-      <Stack gap="lg">
-        <Title order={2}>Products</Title>
+      <Group align="flex-start">
+        <Filters setParams={setParams} params={params} />
+        <Stack gap="lg" flex={1}>
+          <TextInput
+            size="md"
+            classNames={{ input: classes.homeSearchInput }}
+            value={search}
+            onChange={setSearch}
+            placeholder="Type to search..."
+            leftSection={<IconSearch size={16} />}
+            rightSection={
+              search && (
+                <ActionIcon variant="transparent" onClick={() => setSearch('')}>
+                  <IconX color="gray" stroke={1} />
+                </ActionIcon>
+              )
+            }
+          />
+          <Group justify="space-between">
+            <Text className={classes.homeProductsCount}>{products?.count} results</Text>
+            <Select
+              w={155}
+              size="xs"
+              p={0}
+              variant="unstyled"
+              classNames={{
+                input: classes.homeSelectText,
+              }}
+              data={selectOptions}
+              value={sortBy}
+              onChange={handleSort}
+              allowDeselect={false}
+              leftSectionWidth={26}
+              rightSectionWidth={26}
+              rightSection={<IconChevronDown size={20} />}
+              leftSection={<IconArrowsDownUp size={20} />}
+              comboboxProps={{
+                withinPortal: false,
+                transitionProps: {
+                  transition: 'fade',
+                  duration: 120,
+                  timingFunction: 'ease-out',
+                },
+              }}
+            />
+          </Group>
+          <FilterTags setParams={setParams} params={params} />
 
-        <button type="button" onClick={onCreate}>
-          Create Product
-        </button>
+          <Group gap={20}>
+            {!!products?.results &&
+              products?.results.map((product) => {
+                const disabled = !!cart?.find((productInCart) => productInCart._id === product._id);
 
-        <Filters setParams={setParams} />
+                return (
+                  <Group
+                    key={product._id}
+                    maw="32%"
+                    gap={0}
+                    bg={theme.colors.white[0]}
+                    bd={`1px solid ${theme.colors.black[4]}`}
+                    className={classes.homeContainer}
+                    align="flex-start"
+                    justify="center"
+                  >
+                    <Image src={product.image} h={220} />
+                    <Flex p={16} flex={1} justify="space-between" direction="column" gap={18}>
+                      <Text className={classes.homeTitle}>{product.title}</Text>
+                      <Flex justify="space-between" flex={1}>
+                        <Text className={classes.homePriceText}>Price:</Text>
+                        <Text className={classes.homePrice}>${product.unitPrice}</Text>
+                      </Flex>
+                      <PrimaryButton disabled={disabled} onClick={() => addToCart(product)}>
+                        {disabled ? 'In Cart' : 'Add to Cart'}
+                      </PrimaryButton>
+                    </Flex>
+                  </Group>
+                );
+              })}
+          </Group>
 
-        <Table<Product>
-          data={products?.results}
-          totalCount={products?.count}
-          pageCount={products?.pagesCount}
-          page={DEFAULT_PAGE}
-          perPage={PER_PAGE}
-          columns={COLUMNS}
-          isLoading={isProductLostLoading}
-          onPageChange={(page) => setParams({ page })}
-          onSortingChange={onSortingChange}
-          onRowClick={onRowClick}
-        />
-      </Stack>
+          <Stack align="center">
+            {!!products?.pagesCount && products?.pagesCount !== 1 && (
+              <Pagination
+                color={theme.colors.blue[1]}
+                total={products?.pagesCount}
+                value={activePage > products.pagesCount ? products.pagesCount : activePage}
+                onChange={(page) => {
+                  setParams({ page });
+                  setPage(page);
+                }}
+              />
+            )}
+          </Stack>
+        </Stack>
+      </Group>
     </>
   );
 };

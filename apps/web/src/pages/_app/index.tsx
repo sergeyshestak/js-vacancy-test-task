@@ -5,7 +5,6 @@ import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import theme from 'theme';
 
@@ -33,7 +32,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => (
         </ModalsProvider>
 
         <Notifications autoClose={10000} />
-        <ReactQueryDevtools buttonPosition="bottom-left" />
       </MantineProvider>
     </QueryClientProvider>
   </>

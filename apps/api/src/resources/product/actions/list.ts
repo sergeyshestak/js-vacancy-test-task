@@ -12,17 +12,13 @@ import { AppKoaContext, AppRouter, NestedKeys, Product } from 'types';
 const schema = paginationSchema.extend({
   filter: z
     .object({
-      createdOn: z
-        .object({
-          startDate: z.coerce.date().optional(),
-          endDate: z.coerce.date().optional(),
-        })
-        .optional(),
+      priceFrom: z.string().optional(),
+      priceTo: z.string().optional(),
     })
     .optional(),
   sort: z
     .object({
-      title: z.enum(['asc', 'desc']).optional(),
+      createdOn: z.enum(['asc', 'desc']).optional(),
     })
     .default({}),
 });
@@ -46,16 +42,16 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
   }
 
   if (filter) {
-    const { createdOn, ...otherFilters } = filter;
-
-    if (createdOn) {
-      const { startDate, endDate } = createdOn;
-
+    const { priceTo, priceFrom, ...otherFilters } = filter;
+    if (priceTo) {
       filterOptions.push({
-        createdOn: {
-          ...(startDate && { $gte: startDate }),
-          ...(endDate && { $lt: endDate }),
-        },
+        unitPrice: { $lt: Number(priceTo) },
+      });
+    }
+
+    if (priceFrom) {
+      filterOptions.push({
+        unitPrice: { $gt: Number(priceFrom) },
       });
     }
 

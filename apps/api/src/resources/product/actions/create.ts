@@ -1,20 +1,39 @@
+import multer from '@koa/multer';
+
 import { productService } from 'resources/product';
 
-import { validateMiddleware } from 'middlewares';
+import { cloudStorageService } from 'services';
 
 import { COOKIES } from 'app-constants';
-import { productCreateSchema } from 'schemas';
-import { AppKoaContext, AppRouter, ProductCreateParams } from 'types';
+import { AppKoaContext, AppRouter, Next, ProductCreateParams } from 'types';
 
-async function handler(ctx: AppKoaContext<ProductCreateParams>) {
+const upload = multer();
+
+async function validator(ctx: AppKoaContext<ProductCreateParams>, next: Next) {
+  const { file } = ctx.request;
+
+  ctx.assertClientError(file, { global: 'File cannot be empty' });
+
+  await next();
+}
+
+async function handler(
+  ctx: AppKoaContext<ProductCreateParams, { image: File; body: { title: string; unitPrice: string } }>,
+) {
   const userId = ctx.cookies.get(COOKIES.USER_ID);
-  const { title, unitPrice, image } = ctx.validatedData;
+  const {
+    file,
+    body: { title, unitPrice },
+  } = ctx.request;
+
+  const fileName = `${userId}-${Date.now()}-${file.originalname}`;
+  const { location: productUrl } = await cloudStorageService.uploadPublic(`products/${fileName}`, file);
 
   await productService.insertOne({
     title,
-    unitPrice,
+    unitPrice: Number(unitPrice),
     userId,
-    image,
+    image: productUrl,
     sold: false,
   });
 
@@ -22,5 +41,5 @@ async function handler(ctx: AppKoaContext<ProductCreateParams>) {
 }
 
 export default (router: AppRouter) => {
-  router.post('/create', validateMiddleware(productCreateSchema), handler);
+  router.post('/create', upload.single('image'), validator, handler);
 };

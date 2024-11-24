@@ -41,7 +41,7 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
       subject: 'Password Reset Request for Shopy',
       template: Template.RESET_PASSWORD,
       params: {
-        firstName: user.firstName,
+        firstName: '',
         href: resetPasswordUrl,
       },
     }),

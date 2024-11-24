@@ -1,12 +1,16 @@
 import React from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { Stack, Title } from '@mantine/core';
+import { Group, LoadingOverlay } from '@mantine/core';
 
 import { cartApi } from 'resources/cart';
 
+import { Info } from 'components';
+
+import Table from '../components/Table';
+
 const History: NextPage = () => {
-  const { data: history } = cartApi.usePurchaseHistory();
+  const { data: history, isLoading } = cartApi.usePurchaseHistory();
 
   return (
     <>
@@ -14,17 +18,11 @@ const History: NextPage = () => {
         <title>History</title>
       </Head>
 
-      <Stack gap="lg">
-        <Title order={2}>History</Title>
-        History Page
-      </Stack>
-      {!!history &&
-        history?.map((purchase) => (
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>{purchase.title}</div>
-            <div>{`${purchase.date}`}</div>
-          </div>
-        ))}
+      <Group pos="relative">
+        <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
+
+        {!!history && history.length ? <Table type="history" data={history} /> : <Info type="emptyState" />}
+      </Group>
     </>
   );
 };

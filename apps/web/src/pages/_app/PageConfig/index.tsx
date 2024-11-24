@@ -8,6 +8,7 @@ import { analyticsService } from 'services';
 import { LayoutType, RoutePath, routesConfiguration, ScopeType } from 'routes';
 import config from 'config';
 
+import CartLayout from './CartLayout';
 import MainLayout from './MainLayout';
 import PrivateScope from './PrivateScope';
 import UnauthorizedLayout from './UnauthorizedLayout';
@@ -18,6 +19,7 @@ import 'resources/cart/cart.handlers';
 
 const layoutToComponent = {
   [LayoutType.MAIN]: MainLayout,
+  [LayoutType.CART]: CartLayout,
   [LayoutType.UNAUTHORIZED]: UnauthorizedLayout,
 };
 

@@ -1,0 +1,35 @@
+.cart {
+  &Form {
+    display: 'flex';
+    flex: 1;
+
+    &Container {
+      border-radius: 12px;
+      border: 1px solid var(--mantine-color-black-4);
+    }
+  }
+
+  &Title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    color: var(--mantine-color-black-0);
+  }
+
+  &TotalPrice {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--mantine-color-black-0);
+
+    &Text {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 20px;
+      color: var(--mantine-color-black-1);
+    }
+  }
+}

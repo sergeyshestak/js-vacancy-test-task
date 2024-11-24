@@ -12,10 +12,10 @@ export const productSchema = dbSchema
   })
   .strip();
 
-export const productCreateSchema = productSchema.pick({
-  title: true,
-  unitPrice: true,
-  image: true,
+export const productCreateSchema = z.object({
+  title: z.string().min(1, 'Please enter title').max(30),
+  unitPrice: z.number().min(1, 'Please enter unit price').max(100000),
+  image: z.custom<File>(),
 });
 
 export const productDeleteSchema = z.object({

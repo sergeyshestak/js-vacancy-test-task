@@ -39,3 +39,4 @@ Dockerfile.*
 .prettierignore
 *.svg
 *.ico
+*.png

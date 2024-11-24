@@ -1,19 +1,27 @@
-import React, { FormEvent, useEffect } from 'react';
+import React, { FormEvent, useEffect, useMemo } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { Stack, Title } from '@mantine/core';
+import { Divider, Group, LoadingOverlay, Stack, Text, useMantineTheme } from '@mantine/core';
 import { UseQueryResult } from '@tanstack/react-query';
 
 import { cartApi } from 'resources/cart';
+
+import { Info, PrimaryButton } from 'components';
 
 import { getStripe } from 'utils';
 
 import { Product, Purchase } from 'types';
 
+import Table from './components/Table';
+
+import classes from './index.module.css';
+
 const Cart: NextPage = () => {
+  const theme = useMantineTheme();
   const { mutate: createCheckout, data } = cartApi.useCheckoutSession();
-  const { data: products }: UseQueryResult<Product[]> = cartApi.useCart();
+  const { data: products, isLoading }: UseQueryResult<Product[]> = cartApi.useCart();
   const { mutate: deleteProductFromCart } = cartApi.useDeleteProductFromCart();
+  const totalPrice = useMemo(() => products?.reduce((acc, product) => acc + product.unitPrice, 0), [products]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -48,8 +56,8 @@ const Cart: NextPage = () => {
     redirectToStripeCheckoutSession();
   }, [data]);
 
-  const onRowClick = (product: Product) => {
-    deleteProductFromCart({ productId: product._id });
+  const onRemoveClick = (product: Partial<Product>) => {
+    deleteProductFromCart({ productId: product._id || '' });
   };
 
   return (
@@ -58,22 +66,30 @@ const Cart: NextPage = () => {
         <title>Cart</title>
       </Head>
 
-      <Stack gap="lg">
-        <Title order={2}>Cart</Title>
-        Cart Page
-      </Stack>
-      <form onSubmit={handleSubmit}>
-        <button type="submit">checkout</button>
-      </form>
-      {!!products &&
-        products?.map((product) => (
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <p>{product.title}</p>
-            <button type="button" onClick={() => onRowClick(product)}>
-              delete from cart
-            </button>
-          </div>
-        ))}
+      {!!products && products.length ? (
+        <Group pos="relative" justify="space-between" align="flex-start" gap={80}>
+          <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
+
+          <Table data={products} onRemoveClick={onRemoveClick} type="cart" />
+          <Group bg={theme.colors.white[0]} flex={1} p={20} className={classes.cartFormContainer} mt={-44}>
+            <form onSubmit={handleSubmit} className={classes.cartForm}>
+              <Stack flex={1} gap={16}>
+                <Text className={classes.cartTitle}>Summary</Text>
+                <Divider my="md" />
+                <Group justify="space-between">
+                  <Text className={classes.cartTotalPriceText}>Total price</Text>
+                  <Text className={classes.cartTotalPrice}>${totalPrice}</Text>
+                </Group>
+                <PrimaryButton type="submit">Proceed to Checkout</PrimaryButton>
+              </Stack>
+            </form>
+          </Group>
+        </Group>
+      ) : (
+        <Stack>
+          <Info type="emptyState" />
+        </Stack>
+      )}
     </>
   );
 };

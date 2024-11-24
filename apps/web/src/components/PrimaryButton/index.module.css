@@ -1,0 +1,16 @@
+.primary {
+  height: 40px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background-color: var(--mantine-color-blue-1);
+  color: var(--mantine-color-white-0);
+
+  &:disabled,
+  &:hover {
+    background-color: var(--mantine-color-blue-2);
+  }
+
+  &:active {
+    background-color: var(--mantine-color-blue-0);
+  }
+}

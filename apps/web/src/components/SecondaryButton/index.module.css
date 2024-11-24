@@ -1,0 +1,18 @@
+.secondary {
+  height: 40px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--mantine-color-black-3);
+  background-color: var(--mantine-color-white-0);
+  color: var(--mantine-color-black-1);
+
+  &:hover {
+    border: 1px solid var(--mantine-color-blue-1);
+    color: var(--mantine-color-blue-1);
+  }
+
+  &:active {
+    border: 1px solid var(--mantine-color-blue-0);
+    color: var(--mantine-color-blue-0);
+  }
+}

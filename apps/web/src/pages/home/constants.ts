@@ -5,7 +5,7 @@ import { ProductsListParams, ProductsListSortParams } from 'resources/product';
 import { Product } from 'types';
 
 export const DEFAULT_PAGE = 1;
-export const PER_PAGE = 10;
+export const PER_PAGE = 6;
 export const EXTERNAL_SORT_FIELDS: Array<keyof ProductsListSortParams> = ['createdOn'];
 
 export const DEFAULT_PARAMS: ProductsListParams = {

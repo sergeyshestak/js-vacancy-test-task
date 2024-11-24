@@ -1,20 +1,16 @@
-import { DateValue } from '@mantine/dates';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { apiService } from 'services';
 
-import { ApiError, ListParams, ListResult, Product, ProductCreateParams, ProductDeleteParams, SortOrder } from 'types';
+import { ApiError, ListParams, ListResult, Product, ProductDeleteParams, SortOrder } from 'types';
 
 export type ProductsListFilterParams = {
-  createdOn?: {
-    startDate: DateValue;
-    endDate: DateValue;
-  };
+  priceFrom?: number | string;
+  priceTo?: number | string;
 };
 
 export type ProductsListSortParams = {
   createdOn?: SortOrder;
-  title?: SortOrder;
 };
 
 export type ProductsListParams = ListParams<ProductsListFilterParams, ProductsListSortParams>;
@@ -31,7 +27,7 @@ export const useYourProductsList = () =>
     queryFn: () => apiService.get('/products/your-products'),
   });
 
-export const useProductCreate = <T = ProductCreateParams>() =>
+export const useProductCreate = <T>() =>
   useMutation<null, ApiError, T>({
     mutationFn: (data: T) => apiService.post('/products/create', data),
   });

@@ -1,0 +1,42 @@
+.tableHeader {
+  color: var(--mantine-color-black-1);
+  text-align: right;
+  font-style: normal;
+  font-weight: 400;
+
+  &Main {
+    color: var(--mantine-color-black-1);
+    font-style: normal;
+    font-weight: 400;
+    text-align: left;
+  }
+}
+
+.item {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: right;
+  color: var(--mantine-color-black-0);
+
+  &Main {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: var(--mantine-color-black-0);
+  }
+}
+
+.removeBtn {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--mantine-color-black-1);
+}
+
+.qtyBtn {
+  color: var(--mantine-color-black-3);
+}

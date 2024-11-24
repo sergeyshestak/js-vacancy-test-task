@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { AppShell, Stack } from '@mantine/core';
+import { AppShell, Center, Stack, useMantineTheme } from '@mantine/core';
 
 import { accountApi } from 'resources/account';
 
@@ -11,16 +11,19 @@ interface MainLayoutProps {
 
 const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   const { data: account } = accountApi.useGet();
+  const theme = useMantineTheme();
 
   if (!account) return null;
 
   return (
-    <AppShell component={Stack} bg="gray.0">
+    <AppShell component={Stack} bg={theme.colors.black[5]}>
       <Header />
 
-      <AppShell.Main p={32} pt={account.isShadow ? 144 : 104}>
-        {children}
-      </AppShell.Main>
+      <Center flex={1}>
+        <AppShell.Main p={48} pt={account.isShadow ? 144 : 104} maw={1440} flex={1}>
+          {children}
+        </AppShell.Main>
+      </Center>
     </AppShell>
   );
 };
