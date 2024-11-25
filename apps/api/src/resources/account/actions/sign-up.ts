@@ -1,7 +1,8 @@
+import { cartService } from 'resources/cart';
 import { userService } from 'resources/user';
 
 import { validateMiddleware } from 'middlewares';
-import { analyticsService, emailService } from 'services';
+import { emailService } from 'services';
 import { securityUtil } from 'utils';
 
 import config from 'config';
@@ -22,31 +23,29 @@ async function validator(ctx: AppKoaContext<SignUpParams>, next: Next) {
 }
 
 async function handler(ctx: AppKoaContext<SignUpParams>) {
-  const { firstName, lastName, email, password } = ctx.validatedData;
+  const { email, password } = ctx.validatedData;
 
   const [hash, signupToken] = await Promise.all([securityUtil.getHash(password), securityUtil.generateSecureToken()]);
 
   const user = await userService.insertOne({
     email,
-    firstName,
-    lastName,
-    fullName: `${firstName} ${lastName}`,
     passwordHash: hash.toString(),
     isEmailVerified: false,
     signupToken,
   });
 
-  analyticsService.track('New user created', {
-    firstName,
-    lastName,
+  await cartService.insertOne({
+    userId: user._id,
+    cart: [],
+    purchaseHistory: [],
   });
 
   await emailService.sendTemplate<Template.VERIFY_EMAIL>({
     to: user.email,
-    subject: 'Please Confirm Your Email Address for Ship',
+    subject: 'Please Confirm Your Email Address for Shopy',
     template: Template.VERIFY_EMAIL,
     params: {
-      firstName: user.firstName,
+      firstName: '',
       href: `${config.API_URL}/account/verify-email?token=${signupToken}`,
     },
   });

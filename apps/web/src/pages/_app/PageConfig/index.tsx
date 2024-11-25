@@ -1,4 +1,4 @@
-import React, { FC, Fragment, ReactElement } from 'react';
+import React, { FC, Fragment, ReactElement, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { accountApi } from 'resources/account';
@@ -8,14 +8,18 @@ import { analyticsService } from 'services';
 import { LayoutType, RoutePath, routesConfiguration, ScopeType } from 'routes';
 import config from 'config';
 
+import CartLayout from './CartLayout';
 import MainLayout from './MainLayout';
 import PrivateScope from './PrivateScope';
 import UnauthorizedLayout from './UnauthorizedLayout';
 
 import 'resources/user/user.handlers';
+import 'resources/product/product.handlers';
+import 'resources/cart/cart.handlers';
 
 const layoutToComponent = {
   [LayoutType.MAIN]: MainLayout,
+  [LayoutType.CART]: CartLayout,
   [LayoutType.UNAUTHORIZED]: UnauthorizedLayout,
 };
 
@@ -30,15 +34,15 @@ interface PageConfigProps {
 
 const PageConfig: FC<PageConfigProps> = ({ children }) => {
   const { route, push } = useRouter();
-  const { data: account, isLoading: isAccountLoading } = accountApi.useGet({
-    onSettled: () => {
-      if (!config.MIXPANEL_API_KEY) return;
 
-      analyticsService.init();
+  const { data: account, isLoading: isAccountLoading, isSuccess, isError } = accountApi.useGet();
 
-      analyticsService.setUser(account);
-    },
-  });
+  useEffect(() => {
+    if ((!isSuccess && !isError) || !config.MIXPANEL_API_KEY) return;
+
+    analyticsService.init();
+    analyticsService.setUser(account);
+  }, [isSuccess, isError]);
 
   if (isAccountLoading) return null;
 

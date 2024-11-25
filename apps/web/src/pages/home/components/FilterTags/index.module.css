@@ -1,0 +1,18 @@
+.tag {
+  background-color: var(--mantine-color-white-0);
+  border: 1px solid var(--mantine-color-black-4);
+  border-radius: 31px;
+  height: 36px;
+
+  &Text {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--mantine-color-black-0);
+  }
+
+  &Btn {
+    border-radius: 16px;
+  }
+}

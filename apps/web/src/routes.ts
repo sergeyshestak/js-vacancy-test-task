@@ -5,6 +5,7 @@ export enum ScopeType {
 
 export enum LayoutType {
   MAIN = 'MAIN',
+  CART = 'CART',
   UNAUTHORIZED = 'UNAUTHORIZED',
 }
 
@@ -12,6 +13,11 @@ export enum RoutePath {
   // Private paths
   Home = '/',
   Profile = '/profile',
+  Cart = '/cart',
+  History = '/cart/history',
+  YourProducts = '/your-products',
+  CreateProduct = '/your-products/create-product',
+  PurchaseResult = '/purchase-result',
 
   // Auth paths
   SignIn = '/sign-in',
@@ -37,6 +43,26 @@ export const routesConfiguration: RoutesConfiguration = {
     layout: LayoutType.MAIN,
   },
   [RoutePath.Profile]: {
+    scope: ScopeType.PRIVATE,
+    layout: LayoutType.MAIN,
+  },
+  [RoutePath.Cart]: {
+    scope: ScopeType.PRIVATE,
+    layout: LayoutType.CART,
+  },
+  [RoutePath.History]: {
+    scope: ScopeType.PRIVATE,
+    layout: LayoutType.CART,
+  },
+  [RoutePath.YourProducts]: {
+    scope: ScopeType.PRIVATE,
+    layout: LayoutType.MAIN,
+  },
+  [RoutePath.CreateProduct]: {
+    scope: ScopeType.PRIVATE,
+    layout: LayoutType.MAIN,
+  },
+  [RoutePath.PurchaseResult]: {
     scope: ScopeType.PRIVATE,
     layout: LayoutType.MAIN,
   },

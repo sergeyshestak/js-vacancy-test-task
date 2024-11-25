@@ -1,26 +1,28 @@
 import React, { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Alert, Anchor, Button, Group, PasswordInput, Stack, TextInput, Title } from '@mantine/core';
+import { Alert, Anchor, Group, PasswordInput, Stack, TextInput, Title, useMantineTheme } from '@mantine/core';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useForm } from 'react-hook-form';
 
 import { accountApi } from 'resources/account';
 
-import { GoogleIcon } from 'public/icons';
+import { PrimaryButton } from 'components';
 
 import { handleApiError } from 'utils';
 
 import { RoutePath } from 'routes';
-import config from 'config';
 
 import { signInSchema } from 'schemas';
 import { SignInParams } from 'types';
 
+import classes from './index.module.css';
+
 type SignInParamsWithCredentials = SignInParams & { credentials?: string };
 
 const SignIn: NextPage = () => {
+  const theme = useMantineTheme();
   const {
     register,
     handleSubmit,
@@ -50,8 +52,12 @@ const SignIn: NextPage = () => {
               <TextInput
                 {...register('email')}
                 label="Email Address"
-                placeholder="Enter email address"
+                placeholder="Enter address"
                 error={errors.email?.message}
+                classNames={{
+                  label: classes.label,
+                  input: classes.input,
+                }}
               />
 
               <PasswordInput
@@ -59,6 +65,10 @@ const SignIn: NextPage = () => {
                 label="Password"
                 placeholder="Enter password"
                 error={errors.password?.message}
+                classNames={{
+                  label: classes.label,
+                  input: classes.input,
+                }}
               />
 
               {errors.credentials && (
@@ -66,31 +76,18 @@ const SignIn: NextPage = () => {
                   {errors.credentials.message}
                 </Alert>
               )}
-
-              <Anchor component={Link} href={RoutePath.ForgotPassword}>
-                Forgot password?
-              </Anchor>
             </Stack>
 
-            <Button type="submit" loading={isSignInPending} fullWidth mt={32}>
+            <PrimaryButton type="submit" loading={isSignInPending} fullWidth mt={32}>
               Sign in
-            </Button>
+            </PrimaryButton>
           </form>
         </Stack>
 
         <Stack gap={32}>
-          <Button
-            component="a"
-            variant="outline"
-            leftSection={<GoogleIcon />}
-            href={`${config.API_URL}/account/sign-in/google/auth`}
-          >
-            Continue with Google
-          </Button>
-
           <Group justify="center" gap={12}>
             Don’t have an account?
-            <Anchor component={Link} href={RoutePath.SignUp}>
+            <Anchor component={Link} href={RoutePath.SignUp} c={theme.colors?.blue[1]}>
               Sign up
             </Anchor>
           </Group>

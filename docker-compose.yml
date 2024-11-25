@@ -6,6 +6,8 @@ services:
       - bash
       - -c
       - |
+        chmod 400 config/keyfile
+        chown mongodb:mongodb config/keyfile
         exec docker-entrypoint.sh $$@
     command: mongod --replSet rs --bind_ip_all --keyFile config/keyfile --quiet --logpath /dev/null
     environment:

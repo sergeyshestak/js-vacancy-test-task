@@ -1,0 +1,25 @@
+.input {
+  border-radius: 8px;
+  background-color: var(--mantine-color-white-0);
+  color: var(--mantine-color-black-0);
+  height: var(--input-height-xs);
+  border: 1px solid var(--mantine-color-black-4);
+
+  &:hover,
+  &:focus {
+    border: 1px solid var(--mantine-color-blue-1);
+    caret-color: var(--mantine-color-blue-1);
+  }
+
+  &::placeholder {
+    color: var(--mantine-color-black-2);
+  }
+}
+
+.label {
+  color: var(--mantine-color-black-0);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  margin-bottom: 8px;
+}

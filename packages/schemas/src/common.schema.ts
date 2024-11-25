@@ -20,5 +20,5 @@ export const passwordSchema = z
   .string()
   .regex(
     PASSWORD_REGEX,
-    'The password must contain 6 or more characters with at least one letter (a-z) and one number (0-9).',
+    'The password must contain 6 or more characters with at least one lower letter (a-z), one capital letter (A-Z) and one number (0-9).',
   );

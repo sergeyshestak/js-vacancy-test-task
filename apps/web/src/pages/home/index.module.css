@@ -1,0 +1,63 @@
+.home {
+  &ProductsCount {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: var(--mantine-color-black-0);
+  }
+
+  &SelectText {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--mantine-color-black-0);
+  }
+
+  &SearchInput {
+    border-radius: 8px;
+    border: 1px solid var(--mantine-color-black-4);
+    background-color: var(--mantine-color-white-0);
+    color: var(--mantine-color-black-0);
+
+    &:hover,
+    &:focus {
+      border: 1px solid var(--mantine-color-blue-1);
+      caret-color: var(--mantine-color-blue-1);
+    }
+
+    &::placeholder {
+      color: var(--mantine-color-black-2);
+    }
+  }
+
+  &Container {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  &Title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    color: var(--mantine-color-black-0);
+  }
+
+  &Price {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    color: var(--mantine-color-black-0);
+
+    &Text {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 24px;
+      color: var(--mantine-color-black-2);
+    }
+  }
+}

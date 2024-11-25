@@ -10,6 +10,13 @@ const dotenvConfig = dotenv.config({
 module.exports = {
   env: dotenvConfig.parsed,
   webpack(config) {
+    // Enable polling based on env variable being set
+    if (process.env.NEXT_PUBLIC_WEBPACK_USEPOLLING) {
+      config.watchOptions = {
+        poll: 500,
+        aggregateTimeout: 300,
+      };
+    }
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],

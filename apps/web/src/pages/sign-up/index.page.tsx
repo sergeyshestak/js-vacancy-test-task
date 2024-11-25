@@ -4,23 +4,23 @@ import Head from 'next/head';
 import Link from 'next/link';
 import {
   Anchor,
-  Button,
   Checkbox,
+  CheckboxProps,
   Group,
   PasswordInput,
-  SimpleGrid,
   Stack,
   Text,
   TextInput,
   Title,
-  Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconCircleCheck } from '@tabler/icons-react';
 import { useForm } from 'react-hook-form';
 
 import { accountApi } from 'resources/account';
 
-import { GoogleIcon } from 'public/icons';
+import { PrimaryButton } from 'components';
 
 import { handleApiError } from 'utils';
 
@@ -30,30 +30,34 @@ import config from 'config';
 import { signUpSchema } from 'schemas';
 import { SignUpParams } from 'types';
 
+import classes from './index.module.css';
+
 type SignUpResponse = { signupToken?: string };
 
 const passwordRules = [
   {
-    title: 'Be 6-50 characters',
+    title: 'Must be at least 8 characters',
     done: false,
   },
   {
-    title: 'Have at least one letter',
+    title: 'Must contain at least 1 number',
     done: false,
   },
   {
-    title: 'Have at least one number',
+    title: 'Must contain lower case and capital letters',
     done: false,
   },
 ];
 
+const CheckboxIcon: CheckboxProps['icon'] = ({ indeterminate, ...others }) => <IconCircleCheck {...others} size={20} />;
+
 const SignUp: NextPage = () => {
+  const theme = useMantineTheme();
   const [email, setEmail] = useState<string | null>(null);
   const [signupToken, setSignupToken] = useState<string | null>(null);
   const [registered, setRegistered] = useState(false);
 
   const [passwordRulesData, setPasswordRulesData] = useState(passwordRules);
-  const [opened, setOpened] = useState(false);
 
   const {
     register,
@@ -68,9 +72,9 @@ const SignUp: NextPage = () => {
   useEffect(() => {
     const updatedPasswordRulesData = [...passwordRules];
 
-    updatedPasswordRulesData[0].done = passwordValue.length >= 6 && passwordValue.length <= 50;
-    updatedPasswordRulesData[1].done = /[a-zA-Z]/.test(passwordValue);
-    updatedPasswordRulesData[2].done = /\d/.test(passwordValue);
+    updatedPasswordRulesData[0].done = passwordValue.length >= 8;
+    updatedPasswordRulesData[1].done = /\d/.test(passwordValue);
+    updatedPasswordRulesData[2].done = /[a-z]/.test(passwordValue) && /[A-Z]/.test(passwordValue);
 
     setPasswordRulesData(updatedPasswordRulesData);
   }, [passwordValue]);
@@ -87,16 +91,6 @@ const SignUp: NextPage = () => {
       },
       onError: (e) => handleApiError(e, setError),
     });
-
-  const label = (
-    <SimpleGrid cols={1} spacing="xs" p={4}>
-      <Text>Password must:</Text>
-
-      {passwordRulesData.map((ruleData) => (
-        <Checkbox key={ruleData.title} label={ruleData.title} checked={ruleData.done} color="white" iconColor="dark" />
-      ))}
-    </SimpleGrid>
-  );
 
   if (registered) {
     return (
@@ -139,59 +133,50 @@ const SignUp: NextPage = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack gap={20}>
               <TextInput
-                {...register('firstName')}
-                label="First Name"
-                maxLength={100}
-                placeholder="Enter first Name"
-                error={errors.firstName?.message}
-              />
-
-              <TextInput
-                {...register('lastName')}
-                label="Last Name"
-                maxLength={100}
-                placeholder="Enter last Name"
-                error={errors.lastName?.message}
-              />
-
-              <TextInput
                 {...register('email')}
                 label="Email Address"
-                placeholder="Enter email Address"
+                placeholder="Enter Address"
                 error={errors.email?.message}
+                classNames={{
+                  label: classes.label,
+                  input: classes.input,
+                }}
               />
 
-              <Tooltip label={label} opened={opened} withArrow>
-                <PasswordInput
-                  {...register('password')}
-                  label="Password"
-                  placeholder="Enter password"
-                  onFocus={() => setOpened(true)}
-                  onBlur={() => setOpened(false)}
-                  error={errors.password?.message}
-                />
-              </Tooltip>
+              <PasswordInput
+                {...register('password')}
+                label="Password"
+                placeholder="Enter password"
+                error={errors.password?.message}
+                classNames={{
+                  label: classes.label,
+                  input: classes.input,
+                }}
+              />
+              <Group gap={8}>
+                {passwordRulesData.map((ruleData) => (
+                  <Checkbox
+                    key={ruleData.title}
+                    label={ruleData.title}
+                    checked={ruleData.done}
+                    iconColor={theme.colors.blue[1]}
+                    classNames={{ input: classes.checkbox, inner: classes.checkboxInner, label: classes.checkboxLabel }}
+                    icon={CheckboxIcon}
+                  />
+                ))}
+              </Group>
             </Stack>
 
-            <Button type="submit" loading={isSignUpPending} fullWidth mt={32}>
-              Sign Up
-            </Button>
+            <PrimaryButton type="submit" loading={isSignUpPending} fullWidth mt={32}>
+              Create Account
+            </PrimaryButton>
           </form>
         </Stack>
 
         <Stack gap={32}>
-          <Button
-            component="a"
-            leftSection={<GoogleIcon />}
-            href={`${config.API_URL}/account/sign-in/google/auth`}
-            variant="outline"
-          >
-            Continue with Google
-          </Button>
-
           <Group justify="center" gap={12}>
             Have an account?
-            <Anchor component={Link} href={RoutePath.SignIn}>
+            <Anchor component={Link} href={RoutePath.SignIn} c={theme.colors.blue[1]}>
               Sign In
             </Anchor>
           </Group>

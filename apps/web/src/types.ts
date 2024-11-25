@@ -22,3 +22,13 @@ export type ListParams<T, F> = {
   filter?: T;
   sort?: SortParams<F>;
 };
+
+export type Purchase = {
+  name: string;
+  images?: string[];
+  unit_amount: number;
+};
+
+export type CheckoutSession = {
+  checkoutSessionId: string;
+};

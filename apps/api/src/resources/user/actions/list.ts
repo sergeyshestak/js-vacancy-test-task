@@ -38,7 +38,7 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
   if (searchValue) {
     const searchPattern = stringUtil.escapeRegExpString(searchValue);
 
-    const searchFields: NestedKeys<User>[] = ['firstName', 'lastName', 'email'];
+    const searchFields: NestedKeys<User>[] = ['email'];
 
     filterOptions.push({
       $or: searchFields.map((field) => ({ [field]: { $regex: searchPattern } })),
@@ -74,5 +74,5 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
 }
 
 export default (router: AppRouter) => {
-  router.get('/', validateMiddleware(schema), handler);
+  router.get('/users-list', validateMiddleware(schema), handler);
 };

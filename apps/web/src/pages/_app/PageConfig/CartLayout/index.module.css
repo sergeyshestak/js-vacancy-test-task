@@ -1,0 +1,20 @@
+.list {
+  position: relative;
+}
+
+.tab {
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  padding-right: 32px;
+  padding-bottom: 20px;
+  transition: color 100ms ease;
+  color: var(--mantine-color-black-2);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+
+  &[data-active] {
+    color: var(--mantine-color-black-0);
+  }
+}

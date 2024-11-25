@@ -32,6 +32,7 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
   const { user } = ctx.validatedData;
 
   await authService.setTokens(ctx, user._id, true);
+  await authService.setUserId(ctx, user._id);
 
   ctx.redirect(config.WEB_URL);
 }

@@ -5,7 +5,6 @@ import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import theme from 'theme';
 
@@ -16,11 +15,12 @@ import PageConfig from './PageConfig';
 import '@mantine/core/styles.layer.css';
 import '@mantine/dates/styles.layer.css';
 import '@mantine/notifications/styles.layer.css';
+import '@mantine/dropzone/styles.layer.css';
 
 const App: FC<AppProps> = ({ Component, pageProps }) => (
   <>
     <Head>
-      <title>Ship</title>
+      <title>Shopy</title>
     </Head>
 
     <QueryClientProvider client={queryClient}>
@@ -32,7 +32,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => (
         </ModalsProvider>
 
         <Notifications autoClose={10000} />
-        <ReactQueryDevtools buttonPosition="bottom-left" />
       </MantineProvider>
     </QueryClientProvider>
   </>

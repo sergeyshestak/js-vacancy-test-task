@@ -1,0 +1,31 @@
+.header {
+  border: 0;
+  background-color: var(--mantine-color-black-5);
+}
+
+.title {
+  color: var(--mantine-color-black-0);
+  font-weight: bold;
+}
+
+.list {
+  position: relative;
+}
+
+.indicator {
+  background-color: var(--mantine-color-black-4);
+  border-radius: var(--mantine-radius-xl);
+  width: 140px;
+}
+
+.tab {
+  z-index: 1;
+  margin: 0 16px;
+  font-weight: 500;
+  transition: color 100ms ease;
+  color: var(--mantine-color-black-2);
+
+  &[data-active] {
+    color: var(--mantine-color-black-0);
+  }
+}
