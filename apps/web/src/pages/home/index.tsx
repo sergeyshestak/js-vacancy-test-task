@@ -3,10 +3,10 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import {
   ActionIcon,
+  BackgroundImage,
   ComboboxItem,
   Flex,
   Group,
-  Image,
   Pagination,
   Select,
   Stack,
@@ -136,7 +136,7 @@ const Home: NextPage = () => {
                 return (
                   <Group
                     key={product._id}
-                    maw="32%"
+                    w="32%"
                     gap={0}
                     bg={theme.colors.white[0]}
                     bd={`1px solid ${theme.colors.black[4]}`}
@@ -144,7 +144,7 @@ const Home: NextPage = () => {
                     align="flex-start"
                     justify="center"
                   >
-                    <Image src={product.image} h={220} />
+                    <BackgroundImage src={product.image} h={220} />
                     <Flex p={16} flex={1} justify="space-between" direction="column" gap={18}>
                       <Text className={classes.homeTitle}>{product.title}</Text>
                       <Flex justify="space-between" flex={1}>

@@ -10,7 +10,7 @@ async function handler(ctx: AppKoaContext) {
   const userId = ctx.cookies.get(COOKIES.USER_ID);
   const cart = await cartService.findOne({ userId });
 
-  const purchaseDate = new Date();
+  const purchaseDate = new Date().toString();
   const { results: products } = await productService.find({ _id: { $in: cart?.cart } });
   const purchaseHistory = products.map((product) => ({
     _id: new ObjectId(),

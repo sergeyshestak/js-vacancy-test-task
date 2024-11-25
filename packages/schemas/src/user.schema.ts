@@ -27,10 +27,7 @@ export const signInSchema = z.object({
   password: passwordSchema,
 });
 
-export const signUpSchema = userSchema.extend({
-  email: emailSchema,
-  password: passwordSchema,
-});
+export const signUpSchema = signInSchema;
 
 export const resendEmailSchema = z.object({
   email: emailSchema,
